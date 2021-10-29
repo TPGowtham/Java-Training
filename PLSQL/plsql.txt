@@ -1,0 +1,160 @@
+DECLARE 
+a NUMBER :=10;
+BEGIN
+dbms_output.put_line('Program started.' );
+IF( a > 100 ) THEN
+dbms_output.put_line('a is greater than 100'); 
+END IF;
+dbms_output.put_line('Program completed.');
+END;
+
+DECLARE 
+a CHAR(1) :='u';
+BEGIN
+IF UPPER(a) in ('A','E','I','0','U' ) THEN 
+dbms_output.put_line('The character is in English Vowels');
+END IF;
+END;
+
+DECLARE 
+a NUMBER:=11;
+BEGIN
+dbms_output.put_line ('Program started');
+IF( mod(a,2)=0) THEN 
+dbms_output.put_line('a is even number' ); 
+ELSE
+dbms_output.put_line('a is odd number1'); 
+END IF;
+dbms_output.put_line ('Program completed.');
+END;
+
+DECLARE
+mark NUMBER :=55;
+BEGIN
+dbms_output.put_line('Program started.' );
+IF( mark >= 70) THEN 
+dbms_output.put_line('Grade A');
+ELSIF(mark >= 40 AND mark < 70) THEN
+dbms_output.put_line('Grade B'); 
+ELSIF(mark >=35 AND mark < 40) THEN
+dbms_output.put_line('Grade C');
+END IF;
+dbms_output.put_line('Program completed.'); 
+END
+
+DECLARE 
+   a boolean := true; 
+   b boolean := false; 
+BEGIN 
+   IF (a AND b) THEN 
+      dbms_output.put_line('Line 1 - Condition is true'); 
+   END IF; 
+   IF (a OR b) THEN 
+      dbms_output.put_line('Line 2 - Condition is true'); 
+   END IF; 
+   IF (NOT a) THEN 
+      dbms_output.put_line('Line 3 - a is not true'); 
+   ELSE 
+      dbms_output.put_line('Line 3 - a is true'); 
+   END IF; 
+   IF (NOT b) THEN 
+      dbms_output.put_line('Line 4 - b is not true'); 
+   ELSE 
+      dbms_output.put_line('Line 4 - b is true'); 
+   END IF; 
+END;
+------------------------------------------------------------------------------------------------------------------------------
+
+1.  Insert the data into table using Pl/sql block query
+
+create table student(student_id integer, student_name varchar(20) ,student_last_name varchar(20));
+select * from student;
+
+declare
+stu_id student.student_id%type;
+stu_name student.student_name%type;
+stu_last_name student.student_last_name%type;
+
+begin
+stu_id:=:stu_id;
+stu_name:=:stu_name;
+stu_last_name:=:stu_last_name;
+
+insert into student values(stu_id,stu_name,stu_last_name);
+commit;
+dbms_output.put_line(stu_id ||' ' || stu_name  || ' ' || stu_last_name); 
+end;
+
+2  To delete the no of rows and using implicit cursor to fetch details whether deleted or not
+
+declare
+stu_id student.student_id%type;
+
+begin 
+stu_id:=:stu_id;
+
+delete from student where student_id=stu_id;
+if sql%found then
+dbms_output.put_line('deleted successfully'); 
+else
+dbms_output.put_line('no rows deleted'); 
+end if;
+end;
+
+
+
+3.  firstly add a column Marks by using alter statement and then do updations using Pl/sql block
+alter table student add(marks integer);
+
+declare
+mar student.marks%type;
+stu_id student.student_id%type;
+
+begin
+mar:=:marks;
+stu_id:=:stu_id;
+
+update student set marks=mar where student_id=stu_id;
+if sql%notfound then
+dbms_output.put_line('no updation'); 
+elsif sql%found then
+dbms_output.put_line(sql%rowcount); 
+end if;
+end;
+
+
+4  Now increase 30 marks of each student
+
+update student set marks=marks+30;
+
+
+select *from student;
+
+5.  Assgn5. Implement the explicit cursor as taught and fetch details of those whose marks are >70
+else print less marks
+
+declare 
+stu_id student.student_id%type;
+stu_name student.student_name%type;
+stu_last_name student.student_last_name%type;
+stu_marks student.marks%type;
+
+cursor student_cursor is select student_id,student_name,student_last_name, marks from student;
+begin
+open student_cursor;
+
+loop
+
+fetch student_cursor into stu_id,stu_name,stu_last_name,stu_marks;
+exit when student_cursor%notfound;
+if(stu_marks>70) then
+      dbms_output.put_line('Marks is greater than 70' ); 
+else
+      dbms_output.put_line('LESS THAN 70' ); 
+end if;
+
+dbms_output.put_line(stu_id || stu_name || stu_last_name || stu_marks); 
+end loop;
+
+close student_cursor;
+end;
