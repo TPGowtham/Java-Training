@@ -158,3 +158,56 @@ end loop;
 
 close student_cursor;
 end;
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+declare 
+a integer;
+b integer;
+c integer;
+procedure findmin(x in integer, y in integer, z out integer);
+is 
+begin
+if x<y then
+z:=x;
+else
+z:=y;
+end if;
+end; 
+
+begin 
+a:=4
+b:=5;
+findmin(a,b,c);
+dbms_output.put_line('min valuue is' || c);
+
+
+declare 
+a number;
+procedure square(x in out number)
+is 
+begin
+x:=x*x;
+end;
+begin
+a:=12;
+square(a);
+dbms_output.put_line('square is ' || a);
+end;
+
+create table u_procedure(id number(10),name varchar(20));
+
+create or replace procedure i_procedure(id in number, name in varchar)
+is 
+begin
+insert into u_procedure values(id,name);
+end
+
+begin
+i_procedure(13,'mickel');
+
+dbms_output.put_line('successfully entered');
+end
+
+select * from u_procedure;
